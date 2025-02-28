@@ -1,3 +1,77 @@
-<h2>Olympic games app</h2>
-<hr />
-<p>{{ (olympics$ | async)?.length }} data loaded</p>
+<main class="grid gap-8 w-fit p-2 lg:w-[32rem]">
+  <h2
+    class="px-6 py-2 bg-teal-700 text-white text-5xl font-extralight rounded-xl text-center"
+  >
+    Medal per Country
+  </h2>
+  <div class="grid md:flex gap-6 items-center w-full">
+    <div
+      class="h-full grid gap-2 lg:gap-4 place-content-center rounded-xl border-2 border-teal-700 p-4 w-full"
+    >
+      <h3 class="md:text-xl lg:text-2xl font-extralight text-center">
+        Number of JOs
+      </h3>
+      <ng-container *ngIf="olympics$ | async; else loading">
+        <span class="text-center font-semibold text-xl lg:text-3xl">
+          {{
+            (olympics$ | async)?.[0]?.participations?.length
+          }}
+        </span>
+      </ng-container>
+    </div>
+    <div
+      class="h-full grid gap-4 rounded-xl border-2 border-teal-700 p-4 w-full place-content-center"
+    >
+      <h3 class="lg:text-2xl md:text-lg font-extralight text-center">
+        Number of countries
+      </h3>
+      <ng-container *ngIf="olympics$ | async; else loading">
+        <span class="text-center font-semibold text-xl lg:text-3xl">
+          {{ (olympics$ | async)?.length }}
+        </span>
+      </ng-container>
+      <ng-template #loading>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 -960 960 960"
+          class="aspect-square h-6 lg:h-10 text-center fill-teal-600 animate-spin mx-auto"
+        >
+          <path
+            d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z"
+          />
+        </svg>
+      </ng-template>
+    </div>
+  </div>
+  <ngx-charts-pie-chart
+    [results]="pieChartData$ | async"
+    [view]="view"
+    [labels]="true"
+    [doughnut]="false"
+    [gradient]="false"
+    [arcWidth]="0.15"
+    [explodeSlices]="false"
+    [animations]="true"
+    (select)="onSelect($event)"
+  >
+    <ng-template #tooltipTemplate let-model="model">
+      <div class="w-36 h-16 grid gap-2 justify-center p-0 m-0 inset-0">
+        <h4 class="m-0 text-lg font-light text-white">{{ model.name }}</h4>
+        <span class="text-xl font-light text-white">🏅 {{ model.value }}</span>
+      </div>
+    </ng-template>
+  </ngx-charts-pie-chart>
+  <ng-template #loading>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      height="24px"
+      viewBox="0 -960 960 960"
+      width="24px"
+      class="fill-teal-600 animate-rotate"
+    >
+      <path
+        d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-155.5t86-127Q252-817 325-848.5T480-880q17 0 28.5 11.5T520-840q0 17-11.5 28.5T480-800q-133 0-226.5 93.5T160-480q0 133 93.5 226.5T480-160q133 0 226.5-93.5T800-480q0-17 11.5-28.5T840-520q17 0 28.5 11.5T880-480q0 82-31.5 155t-86 127.5q-54.5 54.5-127 86T480-80Z"
+      />
+    </svg>
+  </ng-template>
+</main>

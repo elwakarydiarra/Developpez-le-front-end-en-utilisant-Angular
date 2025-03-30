@@ -1,0 +1,33 @@
+<h2>Country Details</h2>
+<div *ngIf="countryData">
+  <h1><strong>Country:</strong> {{ countryData.country }}</h1>
+  <!-- Blocs d'informations -->
+  <div class="info-container">
+    <div class="info-box">
+      <h3>Total Participations</h3>
+      <p>{{ totalParticipations }}</p>
+    </div>
+    <div class="info-box">
+      <h3>Total Medals</h3>
+      <p>{{ totalMedals }}</p>
+    </div>
+    <div class="info-box">
+      <h3>Total Athletes</h3>
+      <p>{{ totalAthletes }}</p>
+    </div>
+  </div>
+  <!-- Graphique ngx-charts -->
+  <ngx-charts-line-chart
+    [view]="[700, 400]"
+    [scheme]="'cool'"
+    [results]="chartData"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="true"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="true"
+    [xAxisLabel]="'year'"
+    [yAxisLabel]="'medalsCount'"
+    [autoScale]="true">
+  </ngx-charts-line-chart>
+</div>

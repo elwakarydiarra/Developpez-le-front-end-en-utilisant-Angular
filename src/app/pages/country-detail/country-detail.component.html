@@ -1,0 +1,41 @@
+<div *ngIf="countryData">
+  <div class = "title-container">
+    <div class="title-box">
+      <h1> {{ countryData.country }}</h1>
+    </div>
+  </div>
+  <!-- Infos sur les participations du pays-->
+  <div class="info-container">
+    <div class="info-box">
+      <h3>Number of entries</h3>
+      <p>{{ totalParticipations }}</p>
+    </div>
+    <div class="info-box">
+      <h3>Total number medals</h3>
+      <p>{{ totalMedals }}</p>
+    </div>
+    <div class="info-box">
+      <h3>Total number of athletes</h3>
+      <p>{{ totalAthletes }}</p>
+    </div>
+  </div>
+  <!-- Graphique ngx-charts -->
+  <ngx-charts-line-chart
+    [view]="view"
+    [scheme]="'cool'"
+    [results]="chartData"
+    [xAxis]="true"
+    [yAxis]="true"
+    [legend]="false"
+    [showXAxisLabel]="true"
+    [showYAxisLabel]="false"
+    [xAxisLabel]="'Dates'"
+    [yAxisLabel]="'medalsCount'"
+    [autoScale]="true">
+  </ngx-charts-line-chart>
+</div>
+
+<!-- lien de retour-->
+<div class="back-to-home">
+  <a [routerLink]="['']" class="back-link">← Back to Home</a>
+</div>

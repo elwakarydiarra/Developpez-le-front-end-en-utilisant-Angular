@@ -1,3 +1,34 @@
-<h2>Olympic games app</h2>
-<hr />
-<p>{{ (olympics$ | async)?.length }} data loaded</p>
+
+<div class = "title-container">
+  <div class="title-box">
+    <h1>Medals per Country</h1>
+  </div>
+</div>
+
+<!-- Infos sur les participations des pays-->
+<div class="info-container">
+  <div class="info-box">
+    <h3>Number of JOs</h3>
+    <p>{{ nombreDeJo }}</p>
+  </div>
+  <div class="info-box">
+    <h3>Number of Countries</h3>
+    <p>{{ totalCountries }}</p>
+  </div>
+</div>
+
+ <!-- Gestion de l'abonnement/desabonement-->
+<div *ngIf="olympics$ | async as olympics">
+<!-- Graphique ngx-charts -->
+<ngx-charts-pie-chart
+  [view]="view"
+  [results]="olympics"
+  [legend]="false"
+  [explodeSlices]="false"
+  [labels]="true"
+  [doughnut]="false"
+  [gradient]="false"
+  (select)="onSelect($event)">
+</ngx-charts-pie-chart>
+</div>
+

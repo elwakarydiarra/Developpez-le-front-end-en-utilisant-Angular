@@ -1,0 +1,12 @@
+header {
+  text-align: center;
+  background-image: url('/assets/images/bannière_jeux_olympiques.png'); /* Chemin vers l'image */
+  background-size: cover; /* Ajuste l'image pour couvrir tout le header */
+  background-position: center; /* Centre l'image */
+  background-repeat: no-repeat; /* Empêche la répétition de l'image */
+  height: 200px; /* Hauteur du header */
+  color: white; /* Couleur du texte */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

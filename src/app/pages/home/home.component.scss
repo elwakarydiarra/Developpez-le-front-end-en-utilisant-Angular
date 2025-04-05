@@ -1,0 +1,87 @@
+.title-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+  }
+
+  .title-box {
+    text-align: center;
+    background-color: #147A96; /* couleur de fond blanc */
+    color: rgb(253, 250, 250); /* Couleur du texte */
+    padding: 5px; /* Espacement interne */
+    border-radius: 8px; /* Coins arrondis */
+    border-color: #147A96; /* Couleur de la bordure */
+    text-align: center; /* Centrer le texte */
+    display: inline-block; /* Permet de centrer le texte */
+    margin: 10px; /* Espacement externe */
+  }
+  
+  .title-box h1 {
+    font-family: arial, sans-serif;
+    font-weight: normal;
+    font-size: 24px;
+    margin: 0; /* Supprime la marge par défaut */
+    padding: 0; /* Supprime le remplissage par défaut */
+    color: #f8f5f5; /* Couleur du texte */
+    text-align: center; /* Centrer le texte */
+  }
+
+.info-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+  }  
+  .info-box {
+    text-align: center;
+    background-color: rgb(253, 250, 250); /* couleur de fond blanc */
+    color: rgb(87, 89, 90); /* Couleur du texte */
+    padding: 5px; /* Espacement interne */
+    border-radius: 8px; /* Coins arrondis */
+    border-color: #147A96; /* Couleur de la bordure */
+    border-width: 2px; /* Épaisseur de la bordure */
+    border-style: solid; /* Style de la bordure */
+    text-align: center; /* Centrer le texte */
+    display: inline-block; /* Permet de centrer le texte */
+    margin: 10px; /* Espacement externe */
+  }
+  
+  .info-box h3 {
+    font-family : arial, sans-serif;
+    margin: 0; /* Supprime la marge par défaut */
+    padding: 0; /* Supprime le remplissage par défaut */
+    font-size: 18px;
+    font-weight: normal;
+    color: rgb(87, 89, 90); /* Couleur du texte */
+    
+  }
+  
+  .info-box p {
+    margin: 0; /* Supprime la marge par défaut */
+    padding: 0; /* Supprime le remplissage par défaut */
+    font-size: 18px;
+    font-weight: bold;
+    color: #050000; 
+  }
+
+  ngx-charts-pie-chart {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    height: auto;
+    margin: 0 auto;
+  }
+
+  
+  
+  @media (max-width: 480px) {
+    .info-box {
+      flex: 1 1 100%; /* 1 par ligne sur les petits écrans */
+    }
+  
+    .chart-container {
+      flex-direction: column;
+      padding: 10px;
+    }
+  }

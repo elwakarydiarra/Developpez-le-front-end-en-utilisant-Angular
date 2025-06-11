@@ -1,77 +1,57 @@
 import { Component, OnInit } from '@angular/core';
+import { OlympicService } from 'src/app/core/services/olympic.service'; // Adjust the import path as necessary
 import { Router } from '@angular/router';
-import { Observable, of } from 'rxjs';
-import { OlympicService } from 'src/app/core/services/olympic.service';
-import { ChartType, ChartOptions, ChartData } from 'chart.js';
-import { Olympic} from 'src/app/core/models/Olympic';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
+  styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
-  olympicsData: Olympic[] = [];
-  pieChartLabels: string[] = [];
-  pieChartData!: ChartData<'pie', number[], string>;
-  pieChartType: ChartType = 'pie';
+export class DashboardComponent implements OnInit {
+  countries: any[] = [];
+  totalCountries = 0;
+  totalJO = 0;
 
-  pieChartOptions: ChartOptions = {
-    responsive: true,
-    plugins: {
-      legend: {
-        position: 'right',
-        labels: {
-          color: '#333',
-          font: { size: 14 }
-        }
-      },
-      tooltip: {
-        callbacks: {
-          label: (context) => {
-            const label = context.label;
-            const value = context.parsed;
-            return `${label}: 🏅 ${value}`;
-          }
-        }
+  view: [number, number] = [window.innerWidth * 0.6, 400];
+  colorScheme: Color = {
+  name: 'customScheme',
+  selectable: true,
+  group: ScaleType.Ordinal,
+  domain: ['#956065', '#b9cbe7', '#89a1db', '#793d52', '#9780a1']
+};
+
+
+  constructor(private dataService: OlympicService, private router: Router) {}
+
+  ngOnInit() {
+    this.dataService.getOlympics().subscribe(data => {
+      if (data) {
+        this.countries = data.map((country: any) => ({
+          name: country.country,
+          value: country.participations.reduce((sum: number, p: any) => sum + p.medalsCount, 0),
+          id: country.id
+        }));
+        console.log('Countries for chart:', this.countries);
+        this.totalCountries = data.length;
+        this.totalJO = data[0].participations.length;
       }
-    },
-    onClick: (event, elements) => {
-      if (elements.length > 0) {
-        const index = elements[0].index;
-        const country = this.pieChartLabels[index];
-        this.router.navigate(['/country-details', country]);
-      }
-    }
-  };
-
-  constructor(private olympicService: OlympicService, private router: Router) {}
-
-  ngOnInit(): void {
-    this.olympicService.getOlympics().subscribe((data: Olympic[]) => {
-      this.olympicsData = data;
-
-      const labels = data.map(o => o.country);
-      const totals = data.map(o =>
-        o.participations.reduce((sum : number, p: any) => sum + p.medalsCount, 0)
-      );
-      this.pieChartData = {
-        labels,
-        datasets: [
-          {
-            data: totals,
-            // backgroundColor reste optionnel si tu veux les couleurs par défaut
-          }
-        ]
-      };
     });
   }
 
-  get numberOfJOs(): number {
-    return this.olympicsData.reduce((sum, o) => sum + o.participations.length, 0);
+  onSelect(event: any) {
+  console.log('Selected:', event);
+  const country = this.countries.find(c => c.name === event.name);
+  console.log('Matched country:', country);
+  if (country) {
+    this.router.navigate(['/country-details', country.id]);
+  } else {
+    console.warn('Pays non trouvé pour', event.name);
   }
+}
 
-  get numberOfCountries(): number {
-    return this.olympicsData.length;
-  }
+  goToDetails(id: number) {
+  this.router.navigate(['/country-details', id]);
+}
+
 }

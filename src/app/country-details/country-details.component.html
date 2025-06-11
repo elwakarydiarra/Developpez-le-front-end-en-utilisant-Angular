@@ -1,1 +1,41 @@
-<p>country-details works!</p>
+<div class="header">Détails : {{ country?.country }}</div>
+
+<div class="stats">
+  <div class="card">Participations : <strong>{{ participations }}</strong></div>
+  <div class="card">Total Médailles : <strong>{{ totalMedals }}</strong></div>
+  <div class="card">Total Athlètes : <strong>{{ totalAthletes }}</strong></div>
+</div>
+<div class="graph-wrapper">
+<!--<ngx-charts-line-chart
+  [view]="view"
+  [scheme]="colorScheme"
+  [results]="medalsData"
+  [xAxis]="true"
+  [yAxis]="true"
+  [legend]="false"
+  [showXAxisLabel]="true"
+  [showYAxisLabel]="true"
+  [xAxisLabel]="'Année'"
+  [yAxisLabel]="'Médailles'">
+</ngx-charts-line-chart>-->
+<ngx-charts-line-chart
+  *ngIf="lineMedalsData.length > 0"
+  [view]="view"
+  [scheme]="colorScheme"
+  [results]="lineMedalsData"
+  [xAxis]="true"
+  [yAxis]="true"
+  [legend]="false"
+  [showXAxisLabel]="true"
+  [xAxisLabel]="'Année'"
+  [showYAxisLabel]="true"
+  [yAxisLabel]="'Médailles'"
+>
+</ngx-charts-line-chart>
+</div>
+
+
+<div style="text-align: center; margin-top: 20px;">
+  <button (click)="goBack()">Retour</button>
+</div>
+

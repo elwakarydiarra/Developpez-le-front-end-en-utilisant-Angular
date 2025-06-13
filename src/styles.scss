@@ -1,1 +1,21 @@
-/* You can add global styles to this file, and also import other style files */
+/* STYLE GLOBALEMENT LE TOOLTIP DE ngx-charts */
+
+.ngx-tooltip {
+  background-color: #007C89 !important;
+  color: white !important;
+  width: 100px !important;
+}
+
+.tooltip-title {
+  font-weight: normal;
+  font-size: 20px;
+  text-align: center;
+}
+
+.tooltip-value {
+  font-size: 16px;
+  font-weight: normal;
+  text-align: center;
+}
+
+

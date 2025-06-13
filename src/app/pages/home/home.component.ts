@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service'; // Adjust the import path as necessary
 import { Router } from '@angular/router';
-import { Color, ScaleType } from '@swimlane/ngx-charts';
+import { Color, ScaleType} from '@swimlane/ngx-charts';
 
 @Component({
   selector: 'app-home',
@@ -18,7 +18,9 @@ export class DashboardComponent implements OnInit {
   name: 'customScheme',
   selectable: true,
   group: ScaleType.Ordinal,
-  domain: ['#956065', '#b9cbe7', '#89a1db', '#793d52', '#9780a1']
+  domain: ['#956065', '#b9cbe7', '#89a1db', '#793d52', '#9780a1'],
+
+
 };
 
 
@@ -53,5 +55,18 @@ export class DashboardComponent implements OnInit {
   goToDetails(id: number) {
   this.router.navigate(['/country-details', id]);
 }
+customTooltip({ data }: any): string {
+  return `
+    <div class="ngx-tooltip">
+      <div class="tooltip-title">${data.name}</div>
+      <div class="tooltip-value">🏅 ${data.value}</div>
+    </div>
+  `;
+}
+
+
+
+
+
 
 }

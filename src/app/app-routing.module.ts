@@ -11,6 +11,8 @@ const routes: Routes = [
     component: DashboardComponent,
   },
   { path: 'country-details/:country', component: DetailComponent },
+  { path: '404', component: NotFoundComponent },
+
   {
     path: '**', // wildcard
     component: NotFoundComponent,

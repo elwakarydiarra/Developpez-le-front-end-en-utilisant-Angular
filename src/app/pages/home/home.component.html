@@ -1,25 +1,40 @@
+<!-- ✅ Conteneur principal -->
 <div class="home-container">
 
-<div class="header">
-  <h1>Médailles par pays</h1>
-</div>
-</div>
+  <!-- ✅ Titre -->
+  <div class="header">
+    <h1>Medals per Country</h1>
+  </div>
 
-<div class="stats">
-  <div class="card">Nombre de JOs <br><strong class="highlight">{{ totalJO }}</strong></div>
-  <div class="card">Nombre de Pays <br><strong class="highlight">{{ totalCountries }}</strong></div>
-</div>
+  <!-- ⚠️ Message d'erreur si pas de connexion ou erreur API -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
 
+  <!-- ✅ Statistiques globales -->
+  <div class="stats">
+    <div class="card">
+      Number of JOs<br />
+      <strong class="highlight">{{ totalJO }}</strong>
+    </div>
+    <div class="card">
+      Number of countries<br />
+      <strong class="highlight">{{ totalCountries }}</strong>
+    </div>
+  </div>
 
-<div class="pie-wrapper">
-<ngx-charts-pie-chart
-  *ngIf="countries.length > 0"
-  [view]="view"
-  [results]="countries"
-  [tooltipText]="customTooltip"
-  [scheme]="colorScheme"
-  [labels]="true"
-  [legend]="false"
-  (select)="onSelect($event)">
-</ngx-charts-pie-chart>
+  <!-- ✅ Graphique camembert -->
+  <div class="pie-wrapper">
+    <ngx-charts-pie-chart
+      *ngIf="countries.length > 0"
+      [view]="view"
+      [results]="countries"
+      [tooltipText]="customTooltip"
+      [scheme]="colorScheme"
+      [labels]="true"
+      [legend]="false"
+      (select)="onSelect($event)">
+    </ngx-charts-pie-chart>
+  </div>
+
 </div>

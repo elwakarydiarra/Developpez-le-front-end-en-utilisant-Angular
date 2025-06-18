@@ -1,21 +1,43 @@
-/* STYLE GLOBALEMENT LE TOOLTIP DE ngx-charts */
+/* 🌟 Style personnalisé global du tooltip ngx-charts */
+.custom-tooltip {
+  padding: 8px 12px;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
 
-.ngx-tooltip {
-  //background-color: #007C89 !important;
-  color: white !important;
-  width: 100px !important;
+  /* 🏷️ Titre du tooltip (nom du pays) */
+  .tooltip-title {
+    font-weight: normal;
+    font-size: 16px;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  /* 🎯 Ligne avec l’icône médaille et le nombre */
+  .tooltip-value {
+    display: flex;
+    align-items: center;          // Centre verticalement
+    justify-content: center;      // Centre horizontalement
+    gap: 4px;                      // Légère marge entre icône et texte
+    line-height: 1;
+    text-align: center;
+  }
+
+  /* 🥇 Icône médaille */
+  .medal-icon {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    filter: brightness(0) invert(1); // ✅ rend l’image blanche
+    margin: 0;
+    padding: 0;
+  }
 }
 
-.tooltip-title {
-  font-weight: normal;
-  font-size: 20px;
-  text-align: center;
+/* 🎨 Couleur de fond du tooltip ngx-charts */
+.ngx-charts-tooltip-content.type-tooltip {
+  background-color: #007C89 !important;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
-
-.tooltip-value {
-  font-size: 16px;
-  font-weight: normal;
-  text-align: center;
-}
-
-

@@ -10,6 +10,7 @@ export class NotFoundComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log("Page non trouvée affichée.");
   }
 
 }

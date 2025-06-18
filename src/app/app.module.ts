@@ -7,6 +7,7 @@ import { DetailComponent } from './country-details/country-details.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DashboardComponent } from './pages/home/home.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NotFoundComponent } from './pages/not-found/not-found.component';
 
 
 
@@ -15,6 +16,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AppComponent,
     DetailComponent,
     DashboardComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

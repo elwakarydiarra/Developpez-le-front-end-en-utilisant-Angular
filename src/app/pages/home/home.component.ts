@@ -16,12 +16,15 @@ interface ChartCountry {
   styleUrls: ['./home.component.scss']
 })
 export class DashboardComponent implements OnInit {
-  countries: ChartCountry[] = [];
-  totalCountries = 0;
-  totalJO = 0;
+  countries: ChartCountry[] = [];       // Données pour le graphique
+  totalCountries = 0;                   // Nombre total de pays
+  totalJO = 0;                          // Nombre de Jeux Olympiques
+  errorMessage = '';                   // ✅ Message d’erreur si pas d’Internet
 
+  // Taille du graphique
   view: [number, number] = [window.innerWidth * 0.6, 400];
 
+  // Couleurs personnalisées du camembert
   colorScheme: Color = {
     name: 'customScheme',
     selectable: true,
@@ -35,23 +38,31 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.dataService.getOlympics().subscribe((data: Olympic[] | null) => {
-      if (data) {
-        this.countries = data.map((country: Olympic): ChartCountry => ({
-          name: country.country,
-          value: country.participations.reduce(
-            (sum, p) => sum + p.medalsCount,
-            0
-          ),
-          id: country.id,
-        }));
-        this.totalCountries = data.length;
-        this.totalJO = data[0].participations.length;
-        console.log('Countries for chart:', this.countries);
+    // Appel au service pour récupérer les données olympiques
+    this.dataService.getOlympics().subscribe({
+      next: (data: Olympic[] | null) => {
+        if (data) {
+          this.countries = data.map((country: Olympic): ChartCountry => ({
+            name: country.country,
+            value: country.participations.reduce(
+              (sum, p) => sum + p.medalsCount,
+              0
+            ),
+            id: country.id,
+          }));
+          this.totalCountries = data.length;
+          this.totalJO = data[0].participations.length;
+          console.log('Countries for chart:', this.countries);
+        }
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement :', err);
+        this.errorMessage = '❌ Impossible de charger les données. Vérifiez votre connexion Internet.';
       }
     });
   }
 
+  // Navigation vers la page de détails d’un pays
   onSelect(event: { name: string }): void {
     const country = this.countries.find(c => c.name === event.name);
     if (country) {
@@ -61,15 +72,20 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  // Navigation via un bouton
   goToDetails(id: number): void {
     this.router.navigate(['/country-details', id]);
   }
 
+  // Personnalisation du tooltip
   customTooltip({ data }: { data: ChartCountry }): string {
     return `
-      <div class="ngx-tooltip">
+      <div class="custom-tooltip">
         <div class="tooltip-title">${data.name}</div>
-        <div class="tooltip-value">🏅 ${data.value}</div>
+        <div class="tooltip-value">
+          <img src="assets/images/medal1.png" alt="medal" class="medal-icon" />
+          <span>${data.value}</span>
+        </div>
       </div>
     `;
   }

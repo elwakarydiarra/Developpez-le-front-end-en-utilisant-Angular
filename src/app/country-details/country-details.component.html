@@ -1,29 +1,53 @@
-<div class="header">{{ country.country }}</div>
+<!-- 🌍 Conteneur global -->
+<div class="country-details-container">
 
-<div class="stats">
-  <div class="card">Participations : <strong>{{ participations }}</strong></div>
-  <div class="card">Total Médailles : <strong>{{ totalMedals }}</strong></div>
-  <div class="card">Total Athlètes : <strong>{{ totalAthletes }}</strong></div>
+  <!-- 🏷️ Titre du pays -->
+  <div class="header" *ngIf="country">
+    <h1>{{ country.country }}</h1>
+  </div>
+
+  <!-- ⚠️ Message d'erreur si problème réseau -->
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- 📊 Statistiques du pays -->
+  <div class="stats">
+    <div class="card">
+      Number of entries<br />
+      <strong>{{ participations }}</strong>
+    </div>
+    <div class="card">
+      Total number of medals<br />
+      <strong>{{ totalMedals }}</strong>
+    </div>
+    <div class="card">
+      Total number of athletes<br />
+      <strong>{{ totalAthletes }}</strong>
+    </div>
+  </div>
+
+  <!-- 📈 Graphique -->
+  <div class="graph-wrapper">
+    <ngx-charts-line-chart
+      *ngIf="lineMedalsData.length > 0"
+      [view]="view"
+      [scheme]="colorScheme"
+      [results]="lineMedalsData"
+      [xAxis]="true"
+      [yAxis]="true"
+      [legend]="false"
+      [showXAxisLabel]="true"
+      [xAxisLabel]="'Année'"
+      [showYAxisLabel]="true"
+      [yAxisLabel]="'Médailles'"
+    >
+    </ngx-charts-line-chart>
+  </div>
+
+  <!-- 🔙 Bouton retour -->
+  <div style="text-align: center; margin-top: 20px;">
+    <button (click)="goBack()">Retour</button>
+  </div>
+
 </div>
-<div class="graph-wrapper">
-<ngx-charts-line-chart
-  *ngIf="lineMedalsData.length > 0"
-  [view]="view"
-  [scheme]="colorScheme"
-  [results]="lineMedalsData"
-  [xAxis]="true"
-  [yAxis]="true"
-  [legend]="false"
-  [showXAxisLabel]="true"
-  [xAxisLabel]="'Année'"
-  [showYAxisLabel]="true"
-  [yAxisLabel]="'Médailles'"
->
-</ngx-charts-line-chart>
-</div>
-
-
-<div style="text-align: center; margin-top: 20px;">
-  <button (click)="goBack()">Retour</button>
-</div>
-

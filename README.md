@@ -8,6 +8,8 @@ Avant de démarrer, tu dois avoir installé :
 
 - [Node.js](https://nodejs.org/) (version recommandée : 18.x ou supérieure)
 - [Angular CLI](https://angular.io/cli) (commande : `npm install -g @angular/cli`)
+- L'application utilise [`@swimlane/ngx-charts`](https://github.com/swimlane/ngx-charts) pour les graphiques.
+- Les styles personnalisés sont définis dans les fichiers `.scss`.
 
 ---
 
@@ -51,16 +53,6 @@ http://localhost:4200
 
 ---
 
-## 🧪 Tests (optionnel)
-
-Si des tests ont été mis en place, lance-les avec :
-
-```bash
-ng test
-```
-
----
-
 ## 📁 Build (pour production)
 
 Pour générer une version optimisée de l’application :
@@ -71,12 +63,6 @@ ng build
 
 ---
 
-## 📝 Remarques
-
-- L'application utilise [`@swimlane/ngx-charts`](https://github.com/swimlane/ngx-charts) pour les graphiques.
-- Les styles personnalisés sont définis dans les fichiers `.scss`.
-
----
 
 ## 📬 Contact
 

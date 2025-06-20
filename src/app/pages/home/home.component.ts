@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       <div class="custom-tooltip">
         <div class="tooltip-title">${data.name}</div>
         <div class="tooltip-value">
-          <img src="assets/images/medal1.png" alt="medal" class="medal-icon" />
+          <img src="assets/images/medal.png" alt="medal" class="medal-icon" />
           <span>${data.value}</span>
         </div>
       </div>

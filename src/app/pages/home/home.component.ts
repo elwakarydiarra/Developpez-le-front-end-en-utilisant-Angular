@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { OlympicService } from 'src/app/core/services/olympic.service';
 import { Router } from '@angular/router';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
@@ -15,14 +15,13 @@ interface ChartCountry {
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   countries: ChartCountry[] = [];       // Données pour le graphique
   totalCountries = 0;                   // Nombre total de pays
   totalJO = 0;                          // Nombre de Jeux Olympiques
-  errorMessage = '';                   // ✅ Message d’erreur si pas d’Internet
+  errorMessage = '';                   // Message d’erreur si pas d’Internet
 
-  // Taille du graphique
-  view: [number, number] = [window.innerWidth * 0.6, 400];
+  view: [number, number] = [0, 400];   // Taille du graphique (mise à jour dynamique)
 
   // Couleurs personnalisées du camembert
   colorScheme: Color = {
@@ -38,6 +37,9 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.updateViewSize(); // Définir la taille initiale du graphique
+    window.addEventListener('resize', this.updateViewSize); // Écoute le redimensionnement
+
     // Appel au service pour récupérer les données olympiques
     this.dataService.getOlympics().subscribe({
       next: (data: Olympic[] | null) => {
@@ -61,6 +63,18 @@ export class DashboardComponent implements OnInit {
       }
     });
   }
+
+  ngOnDestroy(): void {
+    // Nettoie l'écouteur pour éviter les fuites mémoire
+    window.removeEventListener('resize', this.updateViewSize);
+  }
+
+  // 📏 Met à jour dynamiquement la taille du graphique
+  private updateViewSize = (): void => {
+    const width = window.innerWidth;
+    const chartWidth = width > 768 ? width * 0.6 : width * 0.9;
+    this.view = [chartWidth, 400];
+  };
 
   // Navigation vers la page de détails d’un pays
   onSelect(event: { name: string }): void {

@@ -1,11 +1,26 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { OlympicService } from 'src/app/core/services/olympic.service';
+import { HttpClient } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { Color, ScaleType } from '@swimlane/ngx-charts';
-import { Olympic } from 'src/app/core/models/Olympic';
-import { Participation } from 'src/app/core/models/Participation';
 
-// Interface utilisée pour le graphique en ligne
+// Interface pour les participations (détail par année)
+interface Participation {
+  id: number;
+  year: number;
+  city: string;
+  medalsCount: number;
+  athleteCount: number;
+}
+
+// Interface pour chaque pays dans le JSON
+interface Olympic {
+  id: number;
+  country: string;
+  participations: Participation[];
+}
+
+// Données formatées pour ngx-charts (graphique en ligne)
 interface LineChartData {
   name: string;
   series: { name: string; value: number }[];
@@ -17,16 +32,18 @@ interface LineChartData {
   styleUrls: ['./country-details.component.scss']
 })
 export class DetailComponent implements OnInit, OnDestroy {
-  country!: Olympic; // Données du pays
-  lineMedalsData: LineChartData[] = []; // Données pour le graphique
+  country!: Olympic;                     // Données du pays sélectionné
+  lineMedalsData: LineChartData[] = []; // Données du graphique
   totalMedals = 0;
   totalAthletes = 0;
   participations = 0;
-  errorMessage = ''; // ✅ En cas d’échec réseau
+  errorMessage = '';
 
-  view: [number, number] = [0, 400]; // Taille du graphique responsive
+  view: [number, number] = [0, 400];     // Dimensions du graphique (responsive)
 
-  // Palette de couleur du graphique
+  private dataSubscription?: Subscription; // Pour se désabonner proprement
+
+  // Couleurs du graphique ngx-charts
   colorScheme: Color = {
     name: 'customScheme',
     selectable: true,
@@ -34,12 +51,12 @@ export class DetailComponent implements OnInit, OnDestroy {
     domain: ['#007C89']
   };
 
-  // Écouteur pour resize
+  // Fonction bindée pour resize (utile à l'unsubscribe)
   private resizeListener = this.updateViewSize.bind(this);
 
   constructor(
     private route: ActivatedRoute,
-    private dataService: OlympicService,
+    private http: HttpClient,
     private router: Router
   ) {}
 
@@ -47,32 +64,35 @@ export class DetailComponent implements OnInit, OnDestroy {
     this.updateViewSize();
     window.addEventListener('resize', this.resizeListener);
 
+    // Récupération de l'ID dans l'URL
     const id = Number(this.route.snapshot.paramMap.get('country'));
 
-    this.dataService.getOlympics().subscribe({
-      next: (data: Olympic[] | null) => {
-        if (!data) return;
-
+    // Chargement du fichier JSON
+    this.dataSubscription = this.http.get<Olympic[]>('assets/mock/olympic.json').subscribe({
+      next: (data) => {
         const found = data.find((c: Olympic) => c.id === id);
 
         if (!found) {
-          this.router.navigate(['/404']);
+          this.router.navigate(['/404']); // Redirection si le pays est introuvable
           return;
         }
 
         this.country = found;
         this.participations = found.participations.length;
 
+        // Calcul du total des médailles
         this.totalMedals = found.participations.reduce(
           (sum, p) => sum + p.medalsCount,
           0
         );
 
+        // Calcul du total des athlètes
         this.totalAthletes = found.participations.reduce(
           (sum, p) => sum + p.athleteCount,
           0
         );
 
+        // Formatage des données pour ngx-charts
         this.lineMedalsData = [
           {
             name: found.country,
@@ -83,25 +103,27 @@ export class DetailComponent implements OnInit, OnDestroy {
           }
         ];
       },
-      error: (err) => {
-        console.error('Erreur de chargement :', err);
-        this.errorMessage = '❌ Impossible de charger les données. Vérifiez votre connexion Internet.';
+      error: () => {
+        this.errorMessage = '❌ Erreur de chargement. Vérifiez votre connexion.';
       }
     });
   }
 
+  // Nettoyage des écouteurs et des abonnements
   ngOnDestroy(): void {
     window.removeEventListener('resize', this.resizeListener);
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
-  // 📏 Met à jour la taille du graphique en fonction de l’écran
+  // Mise à jour dynamique de la taille du graphique
   private updateViewSize(): void {
     const width = window.innerWidth;
-    const chartWidth = width > 768 ? width * 0.8 : width * 0.95;
-    this.view = [chartWidth, 400];
+    this.view = [width > 768 ? width * 0.8 : width * 0.95, 400];
   }
 
-  // 🔙 Retour à la page d'accueil
+  // Redirection vers la page d’accueil
   goBack(): void {
     this.router.navigate(['/']);
   }

@@ -1,9 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs'; // ✅ Pour gérer l'abonnement HTTP
 import { Color, ScaleType } from '@swimlane/ngx-charts';
 
-// Interfaces des données (issues de olympic.json)
+// ✅ Interfaces pour typer les données issues du fichier JSON
 interface Participation {
   id: number;
   year: number;
@@ -18,7 +19,7 @@ interface Olympic {
   participations: Participation[];
 }
 
-// Interface pour formater les données pour ngx-charts
+// ✅ Format adapté pour ngx-charts (camembert)
 interface ChartCountry {
   name: string;
   value: number;
@@ -31,15 +32,20 @@ interface ChartCountry {
   styleUrls: ['./home.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
-  countries: ChartCountry[] = [];     // Données pour le camembert (un pays = une part)
-  totalCountries = 0;                 // Nombre total de pays dans le fichier JSON
-  totalJO = 0;                        // Nombre d'éditions JO (supposé identique pour tous)
-  errorMessage = '';                 // Message d’erreur si chargement échoue
+  // 🧠 Données principales pour le graphique
+  countries: ChartCountry[] = [];
 
-  // Taille du graphique (vue ngx-charts) – ajustée automatiquement
+  // 📊 Statistiques globales
+  totalCountries = 0;
+  totalJO = 0;
+
+  // ❌ Message en cas de chargement échoué
+  errorMessage = '';
+
+  // 📐 Dimensions du graphique (ajustées dynamiquement)
   view: [number, number] = [0, 400];
 
-  // Palette de couleurs personnalisée
+  // 🎨 Palette personnalisée pour ngx-charts
   colorScheme: Color = {
     name: 'customScheme',
     selectable: true,
@@ -47,28 +53,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     domain: ['#956065', '#b9cbe7', '#89a1db', '#793d52', '#9780a1'],
   };
 
+  // 📦 Garde une référence de l’abonnement HTTP pour s'en désabonner proprement
+  private dataSubscription?: Subscription;
+
   constructor(
     private http: HttpClient,
     private router: Router
   ) {}
 
+  // 🔁 Au chargement du composant
   ngOnInit(): void {
-    this.updateViewSize(); // Calcule la taille du graphique selon l'écran
-    window.addEventListener('resize', this.updateViewSize); // Rend le graphique responsive
+    this.updateViewSize(); // Calcule la taille initiale du graphique
+    window.addEventListener('resize', this.updateViewSize); // 📱 Rend le graphique responsive
 
-    // Récupère les données JSON depuis assets/olympic.json
-    this.http.get<Olympic[]>('assets/mock/olympic.json').subscribe({
+    // 📥 Charge les données du fichier JSON
+    this.dataSubscription = this.http.get<Olympic[]>('assets/mock/olympic.json').subscribe({
       next: (data) => {
-        // Transforme les données pour ngx-charts (camembert)
+        // ✅ Formatage des données pour le graphique
         this.countries = data.map((country): ChartCountry => ({
           name: country.country,
           value: country.participations.reduce((sum, p) => sum + p.medalsCount, 0),
           id: country.id,
         }));
 
+        // 📈 Mise à jour des stats globales
         this.totalCountries = data.length;
-
-        // On suppose que toutes les participations ont le même nombre d’éditions
         this.totalJO = data[0]?.participations.length || 0;
       },
       error: () => {
@@ -77,31 +86,36 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  // 🧹 Nettoyage du composant
   ngOnDestroy(): void {
-    // Supprime le listener pour éviter les fuites mémoire
-    window.removeEventListener('resize', this.updateViewSize);
+    window.removeEventListener('resize', this.updateViewSize); // Retire l’écouteur resize
+
+    // ✅ Se désabonne pour éviter les fuites mémoire
+    if (this.dataSubscription) {
+      this.dataSubscription.unsubscribe();
+    }
   }
 
-  // Met à jour dynamiquement la taille du graphique ngx-charts
+  // 🔁 Met à jour la taille du graphique selon la largeur de l’écran
   private updateViewSize = (): void => {
     const width = window.innerWidth;
     this.view = [width > 768 ? width * 0.6 : width * 0.9, 400];
   };
 
-  // Redirige vers la page de détails du pays cliqué
+  // 🎯 Quand l'utilisateur clique sur une part du graphique
   onSelect(event: { name: string }): void {
     const country = this.countries.find(c => c.name === event.name);
     if (country) {
-      this.router.navigate(['/country-details', country.id]);
+      this.router.navigate(['/country-details', country.id]); // Redirige vers la page de détails
     }
   }
 
-  // Redirige vers les détails (utilisé dans un bouton, si besoin)
+  // 🧭 Redirection manuelle vers un pays (ex: bouton)
   goToDetails(id: number): void {
     this.router.navigate(['/country-details', id]);
   }
 
-  // Contenu personnalisé du tooltip ngx-charts
+  // 💬 Personnalisation du tooltip ngx-charts
   customTooltip({ data }: { data: ChartCountry }): string {
     return `
       <div class="custom-tooltip">
